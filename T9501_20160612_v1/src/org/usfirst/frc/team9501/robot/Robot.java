@@ -16,6 +16,7 @@ import org.usfirst.frc.team9501.robot.subsystems.DriveBase;
 import org.usfirst.frc.team9501.robot.subsystems.Intake;
 import org.usfirst.frc.team9501.robot.subsystems.Shooter;
 import org.usfirst.frc.team9501.robot.subsystems.ThumbWheel;
+import org.usfirst.frc.team9501.robot.subsystems.Turret;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,6 +32,7 @@ public class Robot extends IterativeRobot {
 	public static final Intake intake = new Intake();
 	public static final Shooter shooter = new Shooter();
 	public static final Compressor compressor = new Compressor();
+	public static final Turret turret = new Turret();
 	public static OI m_oi = new OI();
 
     Command autonomousCommand;

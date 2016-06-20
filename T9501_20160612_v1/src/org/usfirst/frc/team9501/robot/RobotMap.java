@@ -1,3 +1,4 @@
+
 package org.usfirst.frc.team9501.robot;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -18,6 +19,7 @@ public class RobotMap {
 	public static int rightRearMotorPWM = 5;
 	public static int intakeMotorPWM = 6;
 	public static int shooterMotorCAN = 4; 
+	public static int turretMotorCAN = 3;
 	public static int frontCameraTilt = 8;
 	
 	public static int thumbWheelDIOBit0 = 6; 
@@ -35,6 +37,10 @@ public class RobotMap {
 	public static int joystick1SpeedControl = 11;
 	public static int btnKickBall = 1;
 	public static int btnRunShooter = 3;
+	
+	public static int gamePadUSBPort = 1;
+	public static int btnManualAim = 6;
+	public static int btnAutoAim = 2;
 	
 	public static int pcm2 = 1;
 	public static int pcmBallKickerPort = 5;

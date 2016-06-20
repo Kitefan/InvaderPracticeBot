@@ -19,6 +19,12 @@ public class OI {
      public JoystickButton b_kickBall;
      public JoystickButton b_spinShooter;
      
+    // Create a new joystick for the logitech controller
+     private Joystick m_gamePad = new Joystick(RobotMap.gamePadUSBPort);
+     public JoystickButton b_manualAim;
+     public JoystickButton b_autoAimTurret;
+ 
+     
     // Button button = new JoystickButton(stick, buttonNumber);
     
     // There are a few additional built in buttons you can use. Additionally,
@@ -54,11 +60,20 @@ public class OI {
          b_spinShooter = new JoystickButton(m_joystick1, RobotMap.btnRunShooter);
          b_spinShooter.whileHeld(new StartShooterMotor());
          b_spinShooter.whenReleased(new StopShooterMotor());
-
+         
+         b_manualAim = new JoystickButton(m_gamePad,RobotMap.btnManualAim);
+         b_manualAim.whileHeld(new manualAimTurret());
+         b_autoAimTurret = new JoystickButton(m_gamePad,RobotMap.btnAutoAim);
+         b_autoAimTurret.whenPressed(new autoAimTurret());
+         
      }
 
      public  Joystick getJoystick() {
     	 return m_joystick1;
+     }
+
+     public  Joystick getGamePadXStick() {
+    	 return m_gamePad;
      }
 }
 
