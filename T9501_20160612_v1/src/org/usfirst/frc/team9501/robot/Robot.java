@@ -1,16 +1,21 @@
 
 package org.usfirst.frc.team9501.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
-//import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-//import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-//import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team9501.robot.commands.Drive;
+import org.usfirst.frc.team9501.robot.commands.RunIntakeIn;
 //import org.usfirst.frc.team9501.robot.commands.Drive;
 import org.usfirst.frc.team9501.robot.subsystems.DriveBase;
 import org.usfirst.frc.team9501.robot.subsystems.Intake;
+import org.usfirst.frc.team9501.robot.subsystems.Shooter;
+import org.usfirst.frc.team9501.robot.subsystems.ThumbWheel;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,21 +27,25 @@ import org.usfirst.frc.team9501.robot.subsystems.Intake;
 public class Robot extends IterativeRobot {
 
 	public static final DriveBase driveBase = new DriveBase();
+	public static final ThumbWheel twheel = new ThumbWheel();
 	public static final Intake intake = new Intake();
+	public static final Shooter shooter = new Shooter();
+	public static final Compressor compressor = new Compressor();
 	public static OI m_oi = new OI();
 
-//    Command autonomousCommand;
-//    SendableChooser chooser;
+    Command autonomousCommand;
+    SendableChooser chooser;
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-//        chooser = new SendableChooser();
-//        chooser.addDefault("Default Auto", new Drive());
-        //chooser.addObject("My Auto", new MyAutoCommand());
-//        SmartDashboard.putData("Auto mode", chooser);
+    	compressor.start();
+        chooser = new SendableChooser();
+        chooser.addDefault("Default Auto", new Drive());
+        chooser.addObject("Run Intake", new RunIntakeIn());
+        SmartDashboard.putData("Auto mode", chooser);
     }
 	
 	/**
@@ -62,18 +71,22 @@ public class Robot extends IterativeRobot {
 	 * or additional comparisons to the switch structure below with additional strings & commands.
 	 */
     public void autonomousInit() {
-//        autonomousCommand = (Command) chooser.getSelected();
+    	twheel.GetTowerSelect();
+    	twheel.GetThumbWheelValue();
+    	System.out.println("TowerSelect Value: " + (twheel.GetTowerSelect()==0?"Left":"Right"));
+    	System.out.println("Thumb Wheel Value: " + twheel.GetThumbWheelValue());
+        autonomousCommand = (Command) chooser.getSelected();
         
-		/* String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
+		String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
 		switch(autoSelected) {
-		case "My Auto":
-			autonomousCommand = new MyAutoCommand();
+		case "Run Intake":
+			autonomousCommand = new RunIntakeIn();
 			break;
 		case "Default Auto":
 		default:
-			autonomousCommand = new ExampleCommand();
+			autonomousCommand = new Drive();
 			break;
-		} */
+		} 
     	
     	// schedule the autonomous command (example)
 //        if (autonomousCommand != null) autonomousCommand.start();
@@ -99,12 +112,13 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        
     }
     
     /**
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-//        LiveWindow.run();
+        LiveWindow.run();
     }
 }

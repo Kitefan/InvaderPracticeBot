@@ -17,7 +17,7 @@ public class RobotMap {
 	public static int rightMiddleMotorPWM = 4;
 	public static int rightRearMotorPWM = 5;
 	public static int intakeMotorPWM = 6;
-	
+	public static int shooterMotorCAN = 4; 
 	public static int frontCameraTilt = 8;
 	
 	public static int thumbWheelDIOBit0 = 6; 
@@ -25,10 +25,20 @@ public class RobotMap {
 	public static int thumbWheelDIOBit2 = 8; 
 	public static int thumbWheelDIOBit3 = 9; 
 	
+	public static int towerSelectDIO = 3;
+	
+	public static int ballSensorDIO = 2;
+	
 	public static int joystickUSBPort = 0;
 	public static int btnRunIntakeIn = 5;
 	public static int btnRunIntakeOut = 4;
 	public static int joystick1SpeedControl = 11;
+	public static int btnKickBall = 1;
+	public static int btnRunShooter = 3;
+	
+	public static int pcm2 = 1;
+	public static int pcmBallKickerPort = 5;
+	
     
     // If you are using multiple modules, make sure to define both the port
     // number and the module. For example you with a rangefinder:

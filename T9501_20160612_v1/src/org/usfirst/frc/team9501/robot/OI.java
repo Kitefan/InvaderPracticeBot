@@ -16,6 +16,8 @@ public class OI {
      private Joystick m_joystick1 = new Joystick(RobotMap.joystickUSBPort);
      public JoystickButton b_runIntakeIn;
      public JoystickButton b_runIntakeOut;
+     public JoystickButton b_kickBall;
+     public JoystickButton b_spinShooter;
      
     // Button button = new JoystickButton(stick, buttonNumber);
     
@@ -46,6 +48,12 @@ public class OI {
          b_runIntakeIn.whenReleased(new stopIntake());
          b_runIntakeOut.whileHeld(new RunIntakeOut());
          b_runIntakeOut.whenReleased(new stopIntake());
+         b_kickBall = new JoystickButton(m_joystick1,RobotMap.btnKickBall);
+         b_kickBall.whileHeld(new kickBall());
+         b_kickBall.whenReleased(new retractKicker());
+         b_spinShooter = new JoystickButton(m_joystick1, RobotMap.btnRunShooter);
+         b_spinShooter.whileHeld(new StartShooterMotor());
+         b_spinShooter.whenReleased(new StopShooterMotor());
 
      }
 
