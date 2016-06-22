@@ -38,7 +38,7 @@ public class ThumbWheel extends Subsystem {
     
     /**
      * GetThumbWheel returns an int based on the thumbwheel setting. It reads
-     * 4 DIO ports and calculates an sum based on binary:
+     * 4 DIO ports and calculates a sum based on binary:
      *   bit 0 * 1
      *   bit 1 * 2
      *   bit 2 * 4
