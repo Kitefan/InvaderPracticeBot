@@ -2,7 +2,11 @@
 package org.usfirst.frc.team9501.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -18,6 +22,9 @@ import org.usfirst.frc.team9501.robot.subsystems.Shooter;
 import org.usfirst.frc.team9501.robot.subsystems.ThumbWheel;
 import org.usfirst.frc.team9501.robot.subsystems.Turret;
 
+import com.kauailabs.navx.frc.AHRS;
+
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -25,7 +32,7 @@ import org.usfirst.frc.team9501.robot.subsystems.Turret;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot {
+public class Robot extends IterativeRobot implements PIDOutput {
 
 	public static final DriveBase driveBase = new DriveBase();
 	public static final ThumbWheel twheel = new ThumbWheel();
@@ -35,6 +42,21 @@ public class Robot extends IterativeRobot {
 	public static final Turret turret = new Turret();
 	public static OI m_oi = new OI();
 
+    /* The following PID Controller coefficients will need to be tuned */
+    /* to match the dynamics of your drive system.  Note that the      */
+    /* SmartDashboard in Test mode has support for helping you tune    */
+    /* controllers by displaying a form where you can enter new P, I,  */
+    /* and D constants and test the mechanism.                         */
+    
+    static final double kP = 0.03;
+    static final double kI = 0.00;
+    static final double kD = 0.00;
+    static final double kF = 0.00;
+    
+    static final double kToleranceDegrees = 2.0f;
+    
+	AHRS ahrs;
+	PIDController turnController;
     Command autonomousCommand;
     SendableChooser chooser;
 
@@ -48,6 +70,26 @@ public class Robot extends IterativeRobot {
         chooser.addDefault("Default Auto", new Drive());
         chooser.addObject("Run Intake", new RunIntakeIn());
         SmartDashboard.putData("Auto mode", chooser);
+        
+        try {
+            /* Communicate w/navX MXP via the MXP SPI Bus.                                     */
+            /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
+            /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
+            ahrs = new AHRS(SPI.Port.kMXP); 
+        } catch (RuntimeException ex ) {
+            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+        }
+        turnController = new PIDController(kP, kI, kD, kF, ahrs, this);
+        turnController.setInputRange(-180.0f,  180.0f);
+        turnController.setOutputRange(-1.0, 1.0);
+        turnController.setAbsoluteTolerance(kToleranceDegrees);
+        turnController.setContinuous(true);
+        
+        /* Add the PID Controller to the Test-mode dashboard, allowing manual  */
+        /* tuning of the Turn Controller's P, I and D coefficients.            */
+        /* Typically, only the P value needs to be modified.                   */
+        LiveWindow.addActuator("DriveSystem", "RotateController", turnController);
+
     }
 	
 	/**
@@ -123,4 +165,10 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }
+
+	@Override
+	public void pidWrite(double output) {
+		// TODO Auto-generated method stub
+		
+	}
 }
