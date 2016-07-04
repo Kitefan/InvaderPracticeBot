@@ -21,11 +21,11 @@ public class DriveBase extends Subsystem {
 	 * 
 	 *  set the motor member variables using values from the RobotMap.
 	 */
-	private Victor m_leftFrontMotor = new Victor(RobotMap.leftFrontMotorPWM);
-	private Victor m_rightFrontMotor = new Victor(RobotMap.rightFrontMotorPWM);
-	private Victor m_leftRearMotor = new Victor(RobotMap.leftRearMotorPWM);
-	private Victor m_rightRearMotor = new Victor(RobotMap.rightRearMotorPWM);
-	//private RobotDrive m_driveBase = new RobotDrive(RobotMap.leftRearMotorPWM,RobotMap.rightRearMotorPWM);
+	private Victor m_leftFrontMotor = new Victor(RobotMap.kLeftFrontMotorPWM);
+	private Victor m_rightFrontMotor = new Victor(RobotMap.kRightFrontMotorPWM);
+	private Victor m_leftRearMotor = new Victor(RobotMap.kLeftRearMotorPWM);
+	private Victor m_rightRearMotor = new Victor(RobotMap.kRghtRearMotorPWM);
+	//private RobotDrive m_driveBase = new RobotDrive(RobotMap.kLeftRearMotorPWM,RobotMap.rightRearMotorPWM);
     private RobotDrive m_driveBase = new RobotDrive(m_leftFrontMotor,m_leftRearMotor, m_rightFrontMotor,m_rightRearMotor);
 
     /**

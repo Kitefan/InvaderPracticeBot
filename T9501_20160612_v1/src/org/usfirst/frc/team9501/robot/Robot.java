@@ -2,6 +2,7 @@
 package org.usfirst.frc.team9501.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PIDController;
@@ -41,6 +42,8 @@ public class Robot extends IterativeRobot implements PIDOutput {
 	public static final Compressor compressor = new Compressor();
 	public static final Turret turret = new Turret();
 	public static OI m_oi = new OI();
+	public static DigitalOutput m_bottomLEDs = new DigitalOutput(RobotMap.kBallSensorOut2LEDDIO);
+	public static DigitalOutput m_middleLEDs = new DigitalOutput(RobotMap.kShooterOut2LEDDIO);
 
     /* The following PID Controller coefficients will need to be tuned */
     /* to match the dynamics of your drive system.  Note that the      */
@@ -66,10 +69,12 @@ public class Robot extends IterativeRobot implements PIDOutput {
      */
     public void robotInit() {
     	compressor.start();
+    	    	
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", new Drive());
         chooser.addObject("Run Intake", new RunIntakeIn());
         SmartDashboard.putData("Auto mode", chooser);
+    	SmartDashboard.putNumber("Shooter Speed", shooter.getSpeed());
         
         try {
             /* Communicate w/navX MXP via the MXP SPI Bus.                                     */
@@ -119,6 +124,10 @@ public class Robot extends IterativeRobot implements PIDOutput {
     	twheel.GetThumbWheelValue();
     	System.out.println("TowerSelect Value: " + (twheel.GetTowerSelect()==0?"Left":"Right"));
     	System.out.println("Thumb Wheel Value: " + twheel.GetThumbWheelValue());
+    	
+    	//test to see if LEDs light
+    	
+    
         autonomousCommand = (Command) chooser.getSelected();
         
 		String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
@@ -148,7 +157,8 @@ public class Robot extends IterativeRobot implements PIDOutput {
         // teleop starts running. If you want the autonomous to 
         // continue until interrupted by another command, remove
         // this line or comment it out.
-//        if (autonomousCommand != null) autonomousCommand.cancel();
+       if (autonomousCommand != null) autonomousCommand.cancel();
+       System.out.println("Teleop Started");
     }
 
     /**
@@ -171,4 +181,11 @@ public class Robot extends IterativeRobot implements PIDOutput {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void rotateToAngle(float m_angle,double m_currentRotationRate){
+		turnController.setSetpoint(m_angle);
+        turnController.enable();
+
+	}
+
 }

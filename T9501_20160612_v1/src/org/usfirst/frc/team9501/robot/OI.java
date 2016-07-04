@@ -13,16 +13,17 @@ public class OI {
     // One type of button is a joystick button which is any button on a joystick.
     // You create one by telling it which joystick it's on and which button
     // number it is.
-     private Joystick m_joystick1 = new Joystick(RobotMap.joystickUSBPort);
+     private Joystick m_joystick1 = new Joystick(RobotMap.kJoystickUSBPort);
      public JoystickButton b_runIntakeIn;
      public JoystickButton b_runIntakeOut;
      public JoystickButton b_kickBall;
      public JoystickButton b_spinShooter;
      
     // Create a new joystick for the logitech controller
-     private Joystick m_gamePad = new Joystick(RobotMap.gamePadUSBPort);
+     private Joystick m_gamePad = new Joystick(RobotMap.kGamePadUSBPort);
      public JoystickButton b_manualAim;
      public JoystickButton b_autoAimTurret;
+     public JoystickButton b_middleLEDTest;
  
      
     // Button button = new JoystickButton(stick, buttonNumber);
@@ -48,23 +49,27 @@ public class OI {
     // button.whenReleased(new ExampleCommand());
      
      public OI(){
-    	 b_runIntakeIn = new JoystickButton(m_joystick1,RobotMap.btnRunIntakeIn);
-    	 b_runIntakeOut = new JoystickButton(m_joystick1,RobotMap.btnRunIntakeOut);
+    	 b_runIntakeIn = new JoystickButton(m_joystick1,RobotMap.kBtnRunIntakeIn);
+    	 b_runIntakeOut = new JoystickButton(m_joystick1,RobotMap.kBtnRunIntakeOut);
          b_runIntakeIn.whileHeld(new RunIntakeIn());
          b_runIntakeIn.whenReleased(new stopIntake());
          b_runIntakeOut.whileHeld(new RunIntakeOut());
          b_runIntakeOut.whenReleased(new stopIntake());
-         b_kickBall = new JoystickButton(m_joystick1,RobotMap.btnKickBall);
+         b_kickBall = new JoystickButton(m_joystick1,RobotMap.kBtnKickBall);
          b_kickBall.whileHeld(new kickBall());
          b_kickBall.whenReleased(new retractKicker());
-         b_spinShooter = new JoystickButton(m_joystick1, RobotMap.btnRunShooter);
+         b_spinShooter = new JoystickButton(m_joystick1, RobotMap.kBtnRunShooter);
          b_spinShooter.whileHeld(new StartShooterMotor());
          b_spinShooter.whenReleased(new StopShooterMotor());
          
-         b_manualAim = new JoystickButton(m_gamePad,RobotMap.btnManualAim);
+         b_manualAim = new JoystickButton(m_gamePad,RobotMap.kBtnManualAim);
          b_manualAim.whileHeld(new manualAimTurret());
-         b_autoAimTurret = new JoystickButton(m_gamePad,RobotMap.btnAutoAim);
+         b_autoAimTurret = new JoystickButton(m_gamePad,RobotMap.kBtnAutoAim);
          b_autoAimTurret.whenPressed(new autoAimTurret());
+         b_middleLEDTest = new JoystickButton(m_gamePad,RobotMap.kMiddleLEDTest);
+         b_middleLEDTest.whileHeld(new TurnOnBottomLEDs());
+         b_middleLEDTest.whenReleased(new TurnOffBottomLEDs());
+         
          
      }
 

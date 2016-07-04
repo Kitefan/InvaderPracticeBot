@@ -16,11 +16,11 @@ public class ThumbWheel extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 	
-	private DigitalInput m_bit0 = new DigitalInput(RobotMap.thumbWheelDIOBit0);
-	private DigitalInput m_bit1 = new DigitalInput(RobotMap.thumbWheelDIOBit1);
-	private DigitalInput m_bit2 = new DigitalInput(RobotMap.thumbWheelDIOBit2);
-	private DigitalInput m_bit3 = new DigitalInput(RobotMap.thumbWheelDIOBit3);
-	private DigitalInput m_towerSelect = new DigitalInput(RobotMap.towerSelectDIO);
+	private DigitalInput m_bit0 = new DigitalInput(RobotMap.kThumbWheelBit0InDIO);
+	private DigitalInput m_bit1 = new DigitalInput(RobotMap.kThumbWheelBit1InDIO);
+	private DigitalInput m_bit2 = new DigitalInput(RobotMap.kThumbWheelBit2InDIO);
+	private DigitalInput m_bit3 = new DigitalInput(RobotMap.kThumbWheelBit3InDIO);
+	private DigitalInput m_towerSelect = new DigitalInput(RobotMap.kTowerSelectInDIO);
 
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
