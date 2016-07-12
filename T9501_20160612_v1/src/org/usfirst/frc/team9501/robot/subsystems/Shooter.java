@@ -1,5 +1,6 @@
 package org.usfirst.frc.team9501.robot.subsystems;
 
+import org.usfirst.frc.team9501.robot.OI;
 import org.usfirst.frc.team9501.robot.Robot;
 import org.usfirst.frc.team9501.robot.RobotMap;
 
@@ -15,6 +16,9 @@ public class Shooter extends Subsystem {
 	private CANTalon m_shooterMotor = new CANTalon(RobotMap.kShooterMotorCAN);
 	private Solenoid m_kicker = new Solenoid(RobotMap.kPCM2,RobotMap.kPCMBallKickerPort);
     
+	public Shooter(){
+		m_shooterMotor.setInverted(true);
+	}
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
@@ -25,20 +29,28 @@ public class Shooter extends Subsystem {
     }
     
     public void spinMotor(){
-    	m_shooterMotor.set(0.2);
-    	
+    	double intakeSpeed = 0.0;
+    	intakeSpeed = Robot.m_oi.getJoystick().getRawAxis(2);
+    	SmartDashboard.putNumber("Joystick Speed", intakeSpeed);
+    	m_shooterMotor.set(intakeSpeed);
     }
     
     public void kickBall(){
-    	System.out.println("Shooter Motor Speed: " + this.getSpeed());
-    	SmartDashboard.putNumber("Shooter Speed", this.getSpeed());
-       	SmartDashboard.putNumber("Turret Position at shot",Robot.turret.getPosition() );
+    	double shooterSpeed = 0;
+    	shooterSpeed = this.getSpeed();
+    	if (shooterSpeed > 0) {
+    		Robot.numberOfShots += 1;
+    		SmartDashboard.putNumber("Number of Shots: ", Robot.numberOfShots);
+    	}
+    	System.out.println("Shooter Motor Speed at Shot: " + shooterSpeed);
+    	SmartDashboard.putNumber("Shooter Speed At shot: ",shooterSpeed);
+    	SmartDashboard.putNumber("Turret Position at shot: ",Robot.turret.getPosition() );
            	m_kicker.set(true);
     	
     }
     
     public double getSpeed(){
-    	return m_shooterMotor.getOutputVoltage();
+    	return m_shooterMotor.getEncVelocity();
     }
     
     public void retractKicker(){
@@ -48,6 +60,7 @@ public class Shooter extends Subsystem {
     
     public void stopMotor(){
     	m_shooterMotor.set(0.0);
+    	SmartDashboard.putNumber("Shooter Speed", this.getSpeed());
     }
 }
 

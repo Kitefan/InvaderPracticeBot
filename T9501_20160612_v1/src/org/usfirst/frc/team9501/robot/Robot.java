@@ -2,12 +2,7 @@
 package org.usfirst.frc.team9501.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DigitalOutput;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -23,7 +18,6 @@ import org.usfirst.frc.team9501.robot.subsystems.Shooter;
 import org.usfirst.frc.team9501.robot.subsystems.ThumbWheel;
 import org.usfirst.frc.team9501.robot.subsystems.Turret;
 
-import com.kauailabs.navx.frc.AHRS;
 
 
 /**
@@ -33,7 +27,7 @@ import com.kauailabs.navx.frc.AHRS;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot implements PIDOutput {
+public class Robot extends IterativeRobot  {
 
 	public static final DriveBase driveBase = new DriveBase();
 	public static final ThumbWheel twheel = new ThumbWheel();
@@ -42,26 +36,12 @@ public class Robot extends IterativeRobot implements PIDOutput {
 	public static final Compressor compressor = new Compressor();
 	public static final Turret turret = new Turret();
 	public static OI m_oi = new OI();
-	public static DigitalOutput m_bottomLEDs = new DigitalOutput(RobotMap.kBallSensorOut2LEDDIO);
-	public static DigitalOutput m_middleLEDs = new DigitalOutput(RobotMap.kShooterOut2LEDDIO);
+	public static int numberOfShots = 0;
 
-    /* The following PID Controller coefficients will need to be tuned */
-    /* to match the dynamics of your drive system.  Note that the      */
-    /* SmartDashboard in Test mode has support for helping you tune    */
-    /* controllers by displaying a form where you can enter new P, I,  */
-    /* and D constants and test the mechanism.                         */
     
-    static final double kP = 0.03;
-    static final double kI = 0.00;
-    static final double kD = 0.00;
-    static final double kF = 0.00;
-    
-    static final double kToleranceDegrees = 2.0f;
-    
-	AHRS ahrs;
-	PIDController turnController;
     Command autonomousCommand;
     SendableChooser chooser;
+    SendableChooser towerSelect;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -69,32 +49,27 @@ public class Robot extends IterativeRobot implements PIDOutput {
      */
     public void robotInit() {
     	compressor.start();
+    	turret.setTopLEDs(false);
+    	turret.setMiddleLEDs(false);
+    	turret.setBottomLEDs(false);
     	    	
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", new Drive());
-        chooser.addObject("Run Intake", new RunIntakeIn());
+        chooser.addObject("Rock Wall", new RunIntakeIn());
+        chooser.addObject("Moat", new RunIntakeIn());
+        chooser.addObject("Rough Terrain", new RunIntakeIn());
+        chooser.addObject("Rammparts", new RunIntakeIn());
+        chooser.addObject("None", new RunIntakeIn());
         SmartDashboard.putData("Auto mode", chooser);
-    	SmartDashboard.putNumber("Shooter Speed", shooter.getSpeed());
-        
-        try {
-            /* Communicate w/navX MXP via the MXP SPI Bus.                                     */
-            /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
-            /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
-            ahrs = new AHRS(SPI.Port.kMXP); 
-        } catch (RuntimeException ex ) {
-            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-        }
-        turnController = new PIDController(kP, kI, kD, kF, ahrs, this);
-        turnController.setInputRange(-180.0f,  180.0f);
-        turnController.setOutputRange(-1.0, 1.0);
-        turnController.setAbsoluteTolerance(kToleranceDegrees);
-        turnController.setContinuous(true);
-        
-        /* Add the PID Controller to the Test-mode dashboard, allowing manual  */
-        /* tuning of the Turn Controller's P, I and D coefficients.            */
-        /* Typically, only the P value needs to be modified.                   */
-        LiveWindow.addActuator("DriveSystem", "RotateController", turnController);
 
+    	towerSelect = new SendableChooser();
+    	towerSelect.addDefault("Left",true);
+    	towerSelect.addObject("Right", false);
+        SmartDashboard.putData("Tower Select", towerSelect);
+		SmartDashboard.putNumber("Number of Shots: ",numberOfShots);
+		SmartDashboard.putBoolean("Have Ball",intake.haveBall());
+		SmartDashboard.putNumber("Intake Speed",  0.5);
+		SmartDashboard.putNumber("Joystick Speed", Robot.m_oi.getJoystick().getRawAxis(2));
     }
 	
 	/**
@@ -166,7 +141,23 @@ public class Robot extends IterativeRobot implements PIDOutput {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        
+        if (intake.haveBall()) {
+        	turret.setBottomLEDs(true);
+        	//System.out.println("have ball");
+        }
+        else {
+        	turret.setBottomLEDs(false);
+        	//System.out.println("NO BALL");
+        }
+		SmartDashboard.putNumber("Number of Shots: ",numberOfShots);
+		SmartDashboard.putBoolean("Have Ball",intake.haveBall());
+    	SmartDashboard.putNumber("Shooter Speed", shooter.getSpeed());
+    	if (shooter.getSpeed() > 2.0){
+    		SmartDashboard.putBoolean("Shooter Ready", true);
+    	}
+    	else {
+    		SmartDashboard.putBoolean("Shooter Ready", false);
+    	}
     }
     
     /**
@@ -176,16 +167,7 @@ public class Robot extends IterativeRobot implements PIDOutput {
         LiveWindow.run();
     }
 
-	@Override
-	public void pidWrite(double output) {
-		// TODO Auto-generated method stub
-		
-	}
 	
-	public void rotateToAngle(float m_angle,double m_currentRotationRate){
-		turnController.setSetpoint(m_angle);
-        turnController.enable();
-
-	}
+	
 
 }

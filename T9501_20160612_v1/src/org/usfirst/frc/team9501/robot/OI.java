@@ -56,7 +56,7 @@ public class OI {
          b_runIntakeOut.whileHeld(new RunIntakeOut());
          b_runIntakeOut.whenReleased(new stopIntake());
          b_kickBall = new JoystickButton(m_joystick1,RobotMap.kBtnKickBall);
-         b_kickBall.whileHeld(new kickBall());
+         b_kickBall.whenPressed(new kickBall());
          b_kickBall.whenReleased(new retractKicker());
          b_spinShooter = new JoystickButton(m_joystick1, RobotMap.kBtnRunShooter);
          b_spinShooter.whileHeld(new StartShooterMotor());
@@ -66,9 +66,9 @@ public class OI {
          b_manualAim.whileHeld(new manualAimTurret());
          b_autoAimTurret = new JoystickButton(m_gamePad,RobotMap.kBtnAutoAim);
          b_autoAimTurret.whenPressed(new autoAimTurret());
-         b_middleLEDTest = new JoystickButton(m_gamePad,RobotMap.kMiddleLEDTest);
-         b_middleLEDTest.whileHeld(new TurnOnBottomLEDs());
-         b_middleLEDTest.whenReleased(new TurnOffBottomLEDs());
+ //        b_middleLEDTest = new JoystickButton(m_gamePad,RobotMap.kMiddleLEDTest);
+ //        b_middleLEDTest.whileHeld(new TurnOnBottomLEDs());
+ //        b_middleLEDTest.whenReleased(new TurnOffBottomLEDs());
          
          
      }

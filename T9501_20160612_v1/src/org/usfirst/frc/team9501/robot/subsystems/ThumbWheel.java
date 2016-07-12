@@ -4,6 +4,7 @@ import org.usfirst.frc.team9501.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The ThumbWheel class includes both the thumbwheel and tower select switch.
@@ -33,6 +34,7 @@ public class ThumbWheel extends Subsystem {
      * @return 0 for LEFT and 1 for RIGHT
      */
     public int GetTowerSelect(){
+    	SmartDashboard.putString("Tower Select", m_towerSelect.get() ? "Left" : "Right");
     	return (m_towerSelect.get() ? 0 : 1);
     }
     
@@ -46,10 +48,13 @@ public class ThumbWheel extends Subsystem {
      * @return
      */
     public int GetThumbWheelValue(){
-    	return (m_bit0.get() ? 0 : 1) +
-    		   (m_bit1.get() ? 0 : 2) +
-    		   (m_bit2.get() ? 0 : 4) +
-    		   (m_bit3.get() ? 0 : 8);
+        int thumbwheelValue = 0;
+    	thumbwheelValue = (m_bit0.get() ? 0 : 1) +
+     		   (m_bit1.get() ? 0 : 2) +
+     		   (m_bit2.get() ? 0 : 4) +
+     		   (m_bit3.get() ? 0 : 8);
+    	SmartDashboard.putInt("ThumbWheel Value", thumbwheelValue);
+    	return thumbwheelValue;
     }
 }
 
