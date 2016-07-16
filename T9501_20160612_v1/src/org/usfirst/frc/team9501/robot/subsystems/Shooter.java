@@ -1,6 +1,5 @@
 package org.usfirst.frc.team9501.robot.subsystems;
 
-import org.usfirst.frc.team9501.robot.OI;
 import org.usfirst.frc.team9501.robot.Robot;
 import org.usfirst.frc.team9501.robot.RobotMap;
 
@@ -30,8 +29,8 @@ public class Shooter extends Subsystem {
     
     public void spinMotor(){
     	double intakeSpeed = 0.0;
-    	intakeSpeed = Robot.m_oi.getJoystick().getRawAxis(2);
-    	SmartDashboard.putNumber("Joystick Speed", intakeSpeed);
+    	intakeSpeed = Math.abs(Robot.m_oi.getJoystick().getRawAxis(2));
+    	SmartDashboard.putNumber("Joystick Speed", intakeSpeed);    	
     	m_shooterMotor.set(intakeSpeed);
     }
     
@@ -50,7 +49,7 @@ public class Shooter extends Subsystem {
     }
     
     public double getSpeed(){
-    	return m_shooterMotor.getEncVelocity();
+    	return m_shooterMotor.get();
     }
     
     public void retractKicker(){

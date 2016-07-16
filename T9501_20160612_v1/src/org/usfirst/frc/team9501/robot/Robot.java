@@ -14,6 +14,7 @@ import org.usfirst.frc.team9501.robot.commands.RunIntakeIn;
 //import org.usfirst.frc.team9501.robot.commands.Drive;
 import org.usfirst.frc.team9501.robot.subsystems.DriveBase;
 import org.usfirst.frc.team9501.robot.subsystems.Intake;
+import org.usfirst.frc.team9501.robot.subsystems.Navigation;
 import org.usfirst.frc.team9501.robot.subsystems.Shooter;
 import org.usfirst.frc.team9501.robot.subsystems.ThumbWheel;
 import org.usfirst.frc.team9501.robot.subsystems.Turret;
@@ -36,6 +37,7 @@ public class Robot extends IterativeRobot  {
 	public static final Compressor compressor = new Compressor();
 	public static final Turret turret = new Turret();
 	public static OI m_oi = new OI();
+	public static final Navigation navBoard = new Navigation();
 	public static int numberOfShots = 0;
 
     
@@ -70,7 +72,11 @@ public class Robot extends IterativeRobot  {
 		SmartDashboard.putBoolean("Have Ball",intake.haveBall());
 		SmartDashboard.putNumber("Intake Speed",  0.5);
 		SmartDashboard.putNumber("Joystick Speed", Robot.m_oi.getJoystick().getRawAxis(2));
-    }
+		navBoard.resetAll();
+		navBoard.zeroYaw();
+		SmartDashboard.putNumber("navX Angle", navBoard.getAngel());
+		SmartDashboard.putNumber("navX Pitch", navBoard.getPitch());
+	}
 	
 	/**
      * This function is called once each time the robot enters Disabled mode.
@@ -99,6 +105,7 @@ public class Robot extends IterativeRobot  {
     	twheel.GetThumbWheelValue();
     	System.out.println("TowerSelect Value: " + (twheel.GetTowerSelect()==0?"Left":"Right"));
     	System.out.println("Thumb Wheel Value: " + twheel.GetThumbWheelValue());
+		SmartDashboard.putNumber("navX Pitch", navBoard.getPitch());
     	
     	//test to see if LEDs light
     	
@@ -125,6 +132,8 @@ public class Robot extends IterativeRobot  {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+		SmartDashboard.putNumber("navX Angle", navBoard.getAngel());
+		SmartDashboard.putNumber("navX Pitch", navBoard.getPitch());
     }
 
     public void teleopInit() {
@@ -152,7 +161,9 @@ public class Robot extends IterativeRobot  {
 		SmartDashboard.putNumber("Number of Shots: ",numberOfShots);
 		SmartDashboard.putBoolean("Have Ball",intake.haveBall());
     	SmartDashboard.putNumber("Shooter Speed", shooter.getSpeed());
-    	if (shooter.getSpeed() > 2.0){
+		SmartDashboard.putNumber("navX Angle", navBoard.getAngel());
+		SmartDashboard.putNumber("navX Pitch", navBoard.getPitch());
+    	if (Math.abs(shooter.getSpeed()) > 0.1){
     		SmartDashboard.putBoolean("Shooter Ready", true);
     	}
     	else {
