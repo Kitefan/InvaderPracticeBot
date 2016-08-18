@@ -30,7 +30,7 @@ public class Shooter extends Subsystem {
     public void spinMotor(){
     	double intakeSpeed = 0.0;
     	intakeSpeed = Math.abs(Robot.m_oi.getJoystick().getRawAxis(2));
-    	SmartDashboard.putNumber("Joystick Speed", intakeSpeed);    	
+    	SmartDashboard.putNumber("Shooter Speed", intakeSpeed);    	
     	m_shooterMotor.set(intakeSpeed);
     }
     

@@ -71,11 +71,13 @@ public class Robot extends IterativeRobot  {
 		SmartDashboard.putNumber("Number of Shots: ",numberOfShots);
 		SmartDashboard.putBoolean("Have Ball",intake.haveBall());
 		SmartDashboard.putNumber("Intake Speed",  0.5);
-		SmartDashboard.putNumber("Joystick Speed", Robot.m_oi.getJoystick().getRawAxis(2));
+		SmartDashboard.putNumber("Shooter Speed", Robot.m_oi.getJoystick().getRawAxis(2));
 		navBoard.resetAll();
 		navBoard.zeroYaw();
 		SmartDashboard.putNumber("navX Angle", navBoard.getAngel());
 		SmartDashboard.putNumber("navX Pitch", navBoard.getPitch());
+       	SmartDashboard.putNumber("Turret Position",turret.getPosition() );
+
 	}
 	
 	/**
